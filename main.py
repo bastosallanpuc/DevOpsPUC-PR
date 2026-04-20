@@ -10,3 +10,6 @@ async def root():
 async def funcaoteste():
     return {"message": "Deu boa"}
 
+@app.get("/teste2")
+async def funcaoteste2():
+    return {"teste": True, "num_aleatorio": 1}
