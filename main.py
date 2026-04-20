@@ -1,7 +1,6 @@
 import random
 import string
 
-
 def gerar_cnpj_alfanumerico():
     # 1. Conjunto de caracteres permitidos para os 12 primeiros dígitos (Base + Filial)
     # Segundo a Receita, letras maiúsculas e números
@@ -34,7 +33,6 @@ def gerar_cnpj_alfanumerico():
 
     # Retorna o CNPJ completo (12 alfanuméricos + 2 numéricos)
     return f"{base_cnpj}{dv1}{dv2}"
-
 
 def gerar_massa_testes(quantidade):
     cnpjs = []
