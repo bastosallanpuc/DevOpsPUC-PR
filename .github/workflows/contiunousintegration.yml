@@ -25,6 +25,6 @@ jobs:
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
       - name: Python Lint Code Scanning Action
-        uses: advanced-security/python-lint-code-scanning-action@v1.1.1
+        uses: advanced-security/python-lint-code-scanning-action@v1
         with:
-          linter: pylint
+            linter: flake8
