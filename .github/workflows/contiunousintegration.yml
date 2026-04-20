@@ -2,7 +2,7 @@ name: Continous Integration Workflow
 on:
   pull_request:
     branches:
-      - githubActions
+      - main
 
 jobs:
   build:
