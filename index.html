@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validador de CNPJ Alfanumérico</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #16a34a;
+            --error: #dc2626;
+            --bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h2 {
+            color: #1e293b;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            text-transform: uppercase;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+            font-weight: 500;
+        }
+
+        .valid { background-color: #dcfce7; color: var(--success); border: 1px solid #86efac; }
+        .invalid { background-color: #fee2e2; color: var(--error); border: 1px solid #fca5a5; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Validador CNPJ</h2>
+    <p style="font-size: 0.85rem; color: #64748b; text-align: center; margin-bottom: 1.5rem;">
+        Compatível com o novo padrão alfanumérico.
+    </p>
+
+    <div class="input-group">
+        <label for="cnpjInput">Digite o CNPJ (com ou sem máscara)</label>
+        <input type="text" id="cnpjInput" placeholder="Ex: 12ABC678000191" maxlength="18">
+    </div>
+
+    <button onclick="processar()">Validar Agora</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    function validarCNPJ(cnpj) {
+        // Limpeza: mantém apenas A-Z e 0-9
+        cnpj = cnpj.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+        if (cnpj.length !== 14) {
+            return { valido: false, msg: "O CNPJ deve ter 14 caracteres." };
+        }
+
+        // Conversão de caractere para valor (ASCII - 48)
+        const converter = (c) => {
+            let code = c.charCodeAt(0);
+            return (code >= 48 && code <= 57) ? parseInt(c) : (code - 48);
+        };
+
+        const valores = cnpj.split('').map(converter);
+
+        const calcularDV = (lista, pesos) => {
+            let soma = 0;
+            for (let i = 0; i < lista.length; i++) {
+                soma += lista[i] * pesos[i];
+            }
+            let resto = soma % 11;
+            return resto < 2 ? 0 : 11 - resto;
+        };
+
+        // Pesos para o primeiro dígito
+        const pesos1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        const dv1 = calcularDV(valores.slice(0, 12), pesos1);
+        if (valores[12] !== dv1) return { valido: false, msg: "Dígito Verificador 1 inválido." };
+
+        // Pesos para o segundo dígito
+        const pesos2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        const dv2 = calcularDV(valores.slice(0, 13), pesos2);
+        if (valores[13] !== dv2) return { valido: false, msg: "Dígito Verificador 2 inválido." };
+
+        return { valido: true, msg: "CNPJ Válido!" };
+    }
+
+    function processar() {
+        const input = document.getElementById('cnpjInput').value;
+        const resultDiv = document.getElementById('result');
+        const resultado = validarCNPJ(input);
+
+        resultDiv.style.display = 'block';
+        resultDiv.innerText = resultado.msg;
+
+        if (resultado.valido) {
+            resultDiv.className = 'valid';
+        } else {
+            resultDiv.className = 'invalid';
+        }
+    }
+
+    // Permitir validar ao apertar Enter
+    document.getElementById('cnpjInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') processar();
+    });
+</script>
+
+</body>
+</html>
