@@ -34,10 +34,10 @@ def gerar_cnpj_alfanumerico() -> str:
 
 
 @app.get("/run", response_model=List[str])
-async def get_cnpjs(quantidade: int = Query(default=10, ge=1, le=1000)):
+async def get_cnpjs(quantidade: int = Query(default=100, ge=1, le=1000)):
     """
     Retorna uma lista de CNPJs alfanuméricos válidos.
-    - **quantidade**: Número de itens desejados (padrão 10, máximo 1000).
+    - **quantidade**: Número de itens desejados (padrão 100, máximo 1000).
     """
     return [gerar_cnpj_alfanumerico() for _ in range(quantidade)]
 
