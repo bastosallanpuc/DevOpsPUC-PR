@@ -3,11 +3,6 @@ from fastapi.testclient import TestClient #precisa disso pra conseguir abrir o /
 
 client = TestClient(app)
 
-def is_cnpj_valido(cnpj: str) -> bool:
-    #apoio
-    if len(cnpj) != 14:
-        return False
-
 def test_tamanho_do_cnpj_gerado():
     #14 caracteres sem mascara
     cnpj = gerar_cnpj_alfanumerico()
@@ -40,8 +35,12 @@ def test_api_run_default():
     assert isinstance(dados, list)
     assert len(dados) == 100
 
+    base = dados[0][:12]
+    dvs = dados[0][12:]
     # Valida pelo menos um dos itens gerados pela API
-    assert is_cnpj_valido(dados[0]) is True
+    assert len(dados[0]) == 14
+    assert base.isalnum() is True
+    assert dvs.isdigit() is True
 
 
 def test_api_run_quantidade_personalizada():
