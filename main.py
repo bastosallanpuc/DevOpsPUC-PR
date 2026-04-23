@@ -11,7 +11,7 @@ app = FastAPI(
 
 
 def gerar_cnpj_alfanumerico() -> str:
-    """Gera um único CNPJ alfanumérico válido matematicamente."""
+    """Gera um único CNPJ alfanumérico válido matematicamente. """
     caracteres = string.ascii_uppercase + string.digits
     base_cnpj = ''.join(random.choice(caracteres) for _ in range(12))
 
