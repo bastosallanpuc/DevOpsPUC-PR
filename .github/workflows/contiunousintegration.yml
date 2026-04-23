@@ -28,3 +28,14 @@ jobs:
         uses: advanced-security/python-lint-code-scanning-action@v1
         with:
             linter: flake8
+
+
+    discord:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Run Discord Webhook
+          uses: johnnyhuy/actions-discord-git-webhook@main
+          with:
+            webhook_url: ${{ secrets.DISCORD_WEBHOK }}
